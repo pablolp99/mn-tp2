@@ -1,17 +1,19 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
-#include "knn.h"
+#include "knn.hpp"
 
 using namespace std;
 
 KNNClassifier::KNNClassifier(uint k_neighbors) {
     this->k = k_neighbors;
+    map<string, uint> params = {{'k_neighbors', this->k}};
+    this->params = params;
 }
 
-KNNClassifier KNNClassifier::fit(Matrix X, Vector y) {
+KNNClassifier& KNNClassifier::fit(Matrix X, Vector y) {
     this->_fit(X, y);
-    return this;
+    return *this;
 }
 
 void KNNClassifier::_fit(Matrix X, Vector y) {
@@ -19,27 +21,20 @@ void KNNClassifier::_fit(Matrix X, Vector y) {
     this->target = y;
 }
 
-// Vector KNNClassifier::predict(Matrix X) {
-//     return this->_predict(X);
-// }
+Vector KNNClassifier::predict(Matrix X) {
+    Vector res = Vector(1);
+    return res;
+}
 
-// Vector KNNClassifier::_predict(Matrix X) {
-//     // KNN Algorithm implementation
-//     // Return a Vector
-//     Vector res = {};
-//     return res;
-// }
+map<string, uint> get_params(bool deep) {
+    return this->params;
+}
 
-// map<string, string> get_params(bool deep) {
-//     map<string, string> params = {{'k_neighbors', this->k.to_string()}}
-//     return params;
-// }
-
-// KNNClassifier KNNClassifier::set_params(map<string, string> params) {
-//     try {
-//         this->k = params.at("k_neighbors")
-//     }
-//     catch () ;
-
-//     return this;
-// }
+KNNClassifier& KNNClassifier::set_params(map<string, uint> params) {
+    try {
+        this->params = params;
+        this->k = params.at("k_neighbors");
+    }
+    catch (int e) {} ;
+    return *this;
+}
