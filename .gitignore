@@ -33,3 +33,5 @@
 
 # Custom rules
 build/
+.vscode/
+.idea/
