@@ -3,13 +3,14 @@
 
 namespace py = pybind11;
 
+// Documentation: https://pybind11.readthedocs.io/en/stable/classes.html
+
 PYBIND11_MODULE(mnpkg, m){
     m.doc() = "Metodos Numericos Package - Implementacion de KNN y PCA";
 
-    py::class_<KNNClassifier>(m, "KNNClassifier")
-        .def(py::init<uint &>(), py::arg("k_neighbors"))
+    py::class_<KNNClassifier> knn(m, "KNNClassifier");
+    knn.def(py::init<uint &>(), py::arg("k_neighbors"))
         .def("fit", &KNNClassifier::fit)
         .def("predict", &KNNClassifier::predict)
-        .def("set_params", &KNNClassifier::set_params)
-        .def("get_params", &KNNClassifier::get_params);
+        .def_readwrite("k_neighbors", &KNNClassifier::k);
 }
