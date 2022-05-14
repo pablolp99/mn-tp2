@@ -43,22 +43,21 @@ Vector KNNClassifier::predict(const std::vector<std::vector<int> > list, uint im
         std::map<uint, uint> count_map;
 
         for (uint j = 0; j < k; j++) {
-            uint cls = dist[j].second;
-            auto it = count_map.find(cls);
-            
-            if (it != count_map.end()) {
-                count_map[cls]++;
+            // Key exists in map
+            if ( count_map.find(dist[i].second) == count_map.end() ) {
+                count_map[dist[i].second] = 1;
             } else {
-                count_map[cls] = 1;
+                count_map[dist[i].second] += 1;
             }
-        } 
+        }
 
-        int current_max_freq = -1;
-        int current_class = 0;
+        int current_max_freq = count_map[dist[0].second];
+        int current_class = dist[0].second;
+
         for(auto it = count_map.begin(); it != count_map.end(); ++it ) {
-            if ((int)it->second > current_max_freq) {
-                current_max_freq = it->first;
-                current_class = it->second;
+            if (it->second > current_max_freq){
+                current_max_freq = it->second;
+                current_class = it->first;
             }
         }
 
