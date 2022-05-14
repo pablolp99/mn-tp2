@@ -1,5 +1,5 @@
 #include <iostream>
-#include "pca.h"
+#include "pca.hpp"
 #include "utils.hpp"
 
 using namespace std
