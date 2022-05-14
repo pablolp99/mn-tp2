@@ -6,3 +6,4 @@ echo "Running CMake"
 cmake ..
 echo "Compiling"
 make
+touch __init__.py

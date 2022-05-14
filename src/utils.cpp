@@ -1,12 +1,13 @@
 #include <vector>
 #include <pybind11/pybind11.h>
 #include <pybind11/eigen.h>
+#include <pybind11/stl.h>
 #include "utils.hpp"
 
 namespace py = pybind11;
 
 Matrix read_input_data(const std::vector<std::vector<int> > list, uint imgs, uint img_size) {
-    Matrix result = Matrix(imgs, img_size);
+    Matrix result(imgs, img_size);
 
     uint i = 0;
     for (auto img : list) {
@@ -17,6 +18,8 @@ Matrix read_input_data(const std::vector<std::vector<int> > list, uint imgs, uin
         }
         ++i;
     }
+
+    std::cout << result.cols() << " " << result.rows() << std::endl;
 
     return result;
 }
