@@ -64,12 +64,13 @@ class KNNClassifier(BaseEstimator):
         pred = self.model.predict(imgs, len(imgs), len(imgs.iloc[0]))
         return pd.Series(pred)
 
+    def get_model(self):
+        return self.model
+
 
 if __name__ == '__main__':
     knn = KNNClassifier(3)
-
-    breakpoint()
-
+    
     df = pd.read_csv("../data/train.csv")
 
     y = df["label"]
@@ -78,5 +79,6 @@ if __name__ == '__main__':
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=RANDOM_STATE)
 
     knn.fit(X_train, y_train)
+    breakpoint()
 
     print(knn)

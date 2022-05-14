@@ -4,8 +4,6 @@
 #include "knn.hpp"
 #include "utils.hpp"
 
-using namespace std;
-
 KNNClassifier::KNNClassifier(uint k_neighbors) {
     this->k = k_neighbors;
 }
