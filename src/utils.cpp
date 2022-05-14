@@ -1,3 +1,4 @@
+#include <iostream>
 #include <vector>
 #include <pybind11/pybind11.h>
 #include <pybind11/eigen.h>
@@ -18,8 +19,5 @@ Matrix read_input_data(const std::vector<std::vector<int> > list, uint imgs, uin
         }
         ++i;
     }
-
-    std::cout << result.cols() << " " << result.rows() << std::endl;
-
     return result;
 }

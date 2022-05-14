@@ -15,5 +15,6 @@ PYBIND11_MODULE(mnpkg, m){
         .def("predict", &KNNClassifier::predict)
         .def_readwrite("k_neighbors", &KNNClassifier::k);
 
-    m.def("read_img", &read_input_data, "Convert Python list to Eigen representation");
+    // This function should not be exported to python
+    // m.def("read_img", &read_input_data, "Convert Python list to Eigen representation");
 }
