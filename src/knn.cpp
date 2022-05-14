@@ -51,10 +51,13 @@ Vector KNNClassifier::predict(const std::vector<std::vector<int> > list, uint im
             }
         }
 
+        // Find the class with the most frequency.
         int current_max_freq = count_map[dist[0].second];
         int current_class = dist[0].second;
 
         for(auto it = count_map.begin(); it != count_map.end(); ++it ) {
+            // If there is a tie, we choose the first one
+            // to appear in the search
             if (it->second > current_max_freq){
                 current_max_freq = it->second;
                 current_class = it->first;

@@ -73,7 +73,7 @@ class KNNClassifier(BaseEstimator):
 
 
 if __name__ == '__main__':
-    knn = KNNClassifier(10)
+    knn = KNNClassifier(15)
     
     logger.info("Loading CSV")
     df = pd.read_csv("../data/train.csv")
