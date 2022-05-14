@@ -44,10 +44,10 @@ Vector KNNClassifier::predict(const std::vector<std::vector<int> > list, uint im
 
         for (uint j = 0; j < k; j++) {
             // Key exists in map
-            if ( count_map.find(dist[i].second) == count_map.end() ) {
-                count_map[dist[i].second] = 1;
+            if ( count_map.find(dist[j].second) == count_map.end() ) {
+                count_map[dist[j].second] = 1;
             } else {
-                count_map[dist[i].second] += 1;
+                count_map[dist[j].second] += 1;
             }
         }
 
