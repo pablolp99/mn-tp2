@@ -9,7 +9,7 @@ namespace py = pybind11;
 PYBIND11_MODULE(mnpkg, m){
     m.doc() = "Metodos Numericos Package - Implementacion de KNN y PCA";
 
-    py::class_<KNNClassifier> knn(m, "KNNClassifier");
+    py::class_<KNNClassifier> knn(m, "KNNClassifierCpp");
     knn.def(py::init<uint &>(), py::arg("k_neighbors"))
         .def("fit", &KNNClassifier::fit)
         .def("predict", &KNNClassifier::predict)
