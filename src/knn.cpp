@@ -25,7 +25,7 @@ Vector KNNClassifier::predict(const std::vector<std::vector<int> > list, uint im
 
     Vector res(X.rows());
     
-    // for (uint i = 0; i < X.rows(); ++i){
+    for (uint i = 0; i < X.rows(); ++i){
     //     // KNN Algorithm
     //     std::vector<pair<float, int> > dist;
         
@@ -60,8 +60,8 @@ Vector KNNClassifier::predict(const std::vector<std::vector<int> > list, uint im
     //         }
     //     }
 
-    //     res(i) = current_class;
-    // }
+        res(i) = -1;
+    }
 
     return res;
 }

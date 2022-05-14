@@ -88,7 +88,7 @@ if __name__ == '__main__':
     knn.fit(X_train, y_train)
     
     logger.info("Predicting")
-    results = knn.predict(X_test[:1])
+    results = knn.predict(X_test[:10])
 
     breakpoint()
 
