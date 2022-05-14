@@ -1,15 +1,18 @@
 import pandas as pd
-import sys
-import logging
 
 from sklearn.base import BaseEstimator
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+import sys
+import logging
 
 sys.path.insert(1, '/home/pablo/UBA/comp2022/MN/mn-tp2/build')
 from mnpkg import *
 
+logging.basicConfig(level="INFO")
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+
 
 RANDOM_STATE = 42
 
@@ -66,7 +69,7 @@ class KNNClassifier(BaseEstimator):
             imgs.append(X.iloc[i].tolist())
 
         pred = self.model.predict(imgs, len(imgs), len(imgs[0]))
-        return pred
+        return pd.Series(pred).astype(int)
 
     def get_model(self):
         return self.model
@@ -82,14 +85,14 @@ if __name__ == '__main__':
     X = df.drop(columns='label')
 
     logger.info("Splitting")
-    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=RANDOM_STATE)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=100, random_state=RANDOM_STATE)
+
+    logger.info(f"X,y train: {len(X_train)} - X,y test: {len(X_test)}")
 
     logger.info("Training")
     knn.fit(X_train, y_train)
     
     logger.info("Predicting")
-    results = knn.predict(X_test[:10])
+    results = knn.predict(X_test)
 
-    breakpoint()
-
-    print(knn)
+    logger.info("Accuracy: %f" % (accuracy_score(y_test, results)))

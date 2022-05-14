@@ -1,3 +1,4 @@
+#include <concurrency>
 #include <algorithm>
 #include <iostream>
 #include <map>
@@ -26,46 +27,51 @@ Vector KNNClassifier::predict(const std::vector<std::vector<int> > list, uint im
     Vector res(X.rows());
     
     for (uint i = 0; i < X.rows(); ++i){
-        // KNN Algorithm
-        std::vector<pair<float, int> > dist;
-        
-        // Calculate distances to all training cases
+        std::cout << i << std::endl;
         Vector x = X.row(i);
-        for (int j = 0; j < train_size; ++j){
-            Vector v = train.row(j);
-            dist.push_back(make_pair( ((x - v).norm()) , target(j)));
-        }
-
-        // Sort (smallest to largest)
-        sort(dist.begin(), dist.end());
-
-        // Vote for the most suitable result
-        std::map<uint, uint> count_map;
-
-        for (uint j = 0; j < k; j++) {
-            // Key exists in map
-            if ( count_map.find(dist[j].second) == count_map.end() ) {
-                count_map[dist[j].second] = 1;
-            } else {
-                count_map[dist[j].second] += 1;
-            }
-        }
-
-        // Find the class with the most frequency.
-        int current_max_freq = count_map[dist[0].second];
-        int current_class = dist[0].second;
-
-        for(auto it = count_map.begin(); it != count_map.end(); ++it ) {
-            // If there is a tie, we choose the first one
-            // to appear in the search
-            if (it->second > current_max_freq){
-                current_max_freq = it->second;
-                current_class = it->first;
-            }
-        }
-
-        res(i) = current_class;
+        res(i) = _predict(x);
     }
 
     return res;
+}
+
+int KNNClassifier::_predict(Vector x) {
+    // KNN Algorithm
+    std::vector<pair<float, int> > dist;
+
+    // Calculate distances to all training cases
+    for (int j = 0; j < train_size; ++j){
+        Vector v = train.row(j);
+        dist.push_back(make_pair( ((x - v).norm()) , target(j)));
+    }
+
+    // Sort (smallest to largest)
+    sort(dist.begin(), dist.end());
+
+    // Vote for the most suitable result
+    std::map<uint, uint> count_map;
+
+    for (uint j = 0; j < k; j++) {
+        // Key exists in map
+        if ( count_map.find(dist[j].second) == count_map.end() ) {
+            count_map[dist[j].second] = 1;
+        } else {
+            count_map[dist[j].second] += 1;
+        }
+    }
+
+    // Find the class with the most frequency.
+    int current_max_freq = count_map[dist[0].second];
+    int current_class = dist[0].second;
+
+    for(auto it = count_map.begin(); it != count_map.end(); ++it ) {
+        // If there is a tie, we choose the first one
+        // to appear in the search
+        if (it->second > current_max_freq){
+            current_max_freq = it->second;
+            current_class = it->first;
+        }
+    }
+    
+    return current_class;
 }

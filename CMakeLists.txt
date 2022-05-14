@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 project(mnpkg)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 # find_package(PkgConfig)
 # pkg_check_modules(EIGEN3 REQUIRED eigen3)
