@@ -13,6 +13,8 @@ class KNNClassifier {
     private:
         Matrix train;
         Vector target;
+        uint train_size;
         void _fit(Matrix X, Vector y);
         Vector _predict(Matrix X);
+        uint _predict_vector(Vector x);
 };

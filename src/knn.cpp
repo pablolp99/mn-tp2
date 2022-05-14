@@ -19,6 +19,7 @@ void KNNClassifier::fit(const std::vector<std::vector<int> > list, const std::ve
 void KNNClassifier::_fit(Matrix X, Vector y) {
     this->train = X;
     this->target = y;
+    this->train_size = uint (X.rows());
 }
 
 Vector KNNClassifier::predict(const std::vector<std::vector<int> > list, uint imgs, uint img_size){
@@ -27,7 +28,27 @@ Vector KNNClassifier::predict(const std::vector<std::vector<int> > list, uint im
 }
 
 Vector KNNClassifier::_predict(Matrix X) {
-    Vector res = Vector(1);
+    Vector res(this->train_size);
+    
+    for (uint i = 0; i < this->train_size; ++i){
+        uint pred = _predict_vector(X.row(i));
+        res(i) = pred;
+    }
+
+    return res;
+}
+
+uint KNNClassifier::_predict_vector(Vector x) {
     // KNN Algorithm
+    uint res;
+
+    // Calculate distances to all training cases
+
+    // Sort (smallest to largest)
+
+    // Keep the k closest vectors
+
+    // Vote for the most suitable result
+
     return res;
 }
