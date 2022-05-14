@@ -1,5 +1,6 @@
 #include <pybind11/pybind11.h>
 #include "knn.hpp"
+#include "utils.hpp"
 
 namespace py = pybind11;
 
@@ -13,4 +14,6 @@ PYBIND11_MODULE(mnpkg, m){
         .def("fit", &KNNClassifier::fit)
         .def("predict", &KNNClassifier::predict)
         .def_readwrite("k_neighbors", &KNNClassifier::k);
+
+    m.def("read_img", &read_input_data, "Convert Python list to Eigen representation");
 }
