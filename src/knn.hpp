@@ -19,8 +19,10 @@ class KNNClassifier {
         uint train_size;
 
     private:
+        Vector pred_vector_;
+
         // Private methods
         void _fit(Matrix X, Vector y);
-        Vector _predict(Matrix X);
-        uint _predict_vector(Vector x);
+        // void _predict(Matrix X);
+        // int _predict_vector(Vector x);
 };

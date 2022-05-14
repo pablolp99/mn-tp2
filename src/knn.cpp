@@ -11,42 +11,57 @@ KNNClassifier::KNNClassifier(uint k_neighbors) {
 void KNNClassifier::fit(const std::vector<std::vector<int> > list, const std::vector<int> label, uint imgs, uint img_size){
     Matrix X = read_input_data(list, imgs, img_size);
     Vector y = read_input_label(label, imgs);
-    this->_fit(X, y);
+    _fit(X, y);
 }
 
 void KNNClassifier::_fit(Matrix X, Vector y) {
     this->train = X;
     this->target = y;
-    this->train_size = uint (X.rows());
+    this->train_size = uint(X.rows());
 }
 
 Vector KNNClassifier::predict(const std::vector<std::vector<int> > list, uint imgs, uint img_size){
     Matrix X = read_input_data(list, imgs, img_size);
-    return this->_predict(X);
-}
 
-Vector KNNClassifier::_predict(Matrix X) {
-    Vector res(this->train_size);
+    Vector res(X.rows());
     
-    for (uint i = 0; i < this->train_size; ++i){
-        uint pred = _predict_vector(X.row(i));
-        res(i) = pred;
-    }
+    // for (uint i = 0; i < X.rows(); ++i){
+    //     // KNN Algorithm
+    //     std::vector<pair<float, int> > dist;
+        
+    //     // Calculate distances to all training cases
+    //     for (int i = 0; i < train_size; ++i){
+    //         dist.push_back(make_pair(( train.row(i) - X.row(i) ).norm(), target(i)));
+    //     };
 
-    return res;
-}
+    //     // Sort (smallest to largest)
+    //     sort(dist.begin(), dist.end());
 
-uint KNNClassifier::_predict_vector(Vector x) {
-    // KNN Algorithm
-    uint res;
+    //     // Vote for the most suitable result
+    //     std::map<uint, uint> count_map;
 
-    // Calculate distances to all training cases
+    //     for (uint i = 0; i < k; i++) {
+    //         uint cls = dist[i].second;
+    //         auto it = count_map.find(cls);
+            
+    //         if (it != count_map.end()) {
+    //             count_map[cls]++;
+    //         } else {
+    //             count_map[cls] = 1;
+    //         }
+    //     } 
 
-    // Sort (smallest to largest)
+    //     int current_max_freq = -1;
+    //     int current_class = 0;
+    //     for(auto it = count_map.begin(); it != count_map.end(); ++it ) {
+    //         if ((int)it->second > current_max_freq) {
+    //             current_max_freq = it->first;
+    //             current_class = it->second;
+    //         }
+    //     }
 
-    // Keep the k closest vectors
-
-    // Vote for the most suitable result
+    //     res(i) = current_class;
+    // }
 
     return res;
 }
