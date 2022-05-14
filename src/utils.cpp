@@ -21,3 +21,14 @@ Matrix read_input_data(const std::vector<std::vector<int> > list, uint imgs, uin
     }
     return result;
 }
+
+Matrix read_input_label(const std::vector<int> list, uint imgs) {
+    Vector result(imgs);
+
+    uint i = 0;
+    for (auto label : list) {
+        result(i) = double(label);
+        ++i;
+    }
+    return result;
+}

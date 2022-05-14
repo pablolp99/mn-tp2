@@ -1,16 +1,18 @@
+#include <vector>
 #include "types.hpp"
-#include <map>
 
 using namespace std;
 
 class KNNClassifier {
     public:
         KNNClassifier(uint k_neighbors);
-        KNNClassifier& fit(Matrix X, Vector y);
-        Vector predict(Matrix X);
+        KNNClassifier& fit(const std::vector<std::vector<int> > list, const std::vector<int> y, uint imgs, uint img_size);
+        Vector predict(const std::vector<std::vector<int> > list, uint imgs, uint img_size);
         uint k;
 
     private:
         Matrix train;
         Vector target;
+        void _fit(Matrix X, Vector y);
+        Vector _predict(Matrix X);
 };
