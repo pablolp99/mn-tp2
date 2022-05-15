@@ -8,7 +8,7 @@ import logging
 import sys
 import time
 
-sys.path.insert(1, '/home/pablo/UBA/comp2022/MN/mn-tp2/build')
+sys.path.insert(1, "../build")
 from mnpkg import *
 
 logging.basicConfig(level="INFO")
