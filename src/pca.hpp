@@ -8,13 +8,14 @@ public:
     PCA(uint n_components);
 
     // Methods
-    void fit(Matrix X);
+    void fit(const std::vector<std::vector<int>> list);
     Matrix transform(Matrix X);
 
     //Attributes
     uint alpha;
     Matrix eigenvectors;
 private:
-    pair<double, Vector> _power_method(Matrix A, Vector x0, uint iter);
+    pair<Vector, Matrix> _calculate_eigenvalues(const Matrix& X, uint num, uint num_iter);
+    pair<double, Vector> _power_method(Matrix A, uint iter);
     Matrix _deflate(const Matrix& A, pair<double, Vector> eigen);
 };

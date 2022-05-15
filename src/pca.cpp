@@ -2,29 +2,35 @@
 #include "pca.hpp"
 #include "utils.hpp"
 
-using namespace std
+#include <deque>
+
+using namespace std;
 
 #define SEEN_VECTORS_AMOUNT 5
+#define ITERACIONES 5000
 
 PCA::PCA(uint n_components) {
     this->alpha = n_components;
 }
 
-void PCA::fit(const std::vector<std::vector<int> > list) {
-    Matrix X = read_input_data(list, 5, 5);
+void PCA::fit(const std::vector<std::vector<int>> list) {
+    Matrix X = read_input_data(list, list.size(), list[0].size());
 
     // Promedio de las imagenes
     Vector u = X.colwise().mean();
 
-    X.rowwise() -= 
-    // X_i = (x_i - \mu) / sqrt(n-1)
+    // X_i = (x_i - \mu)^t / sqrt(n-1)
+    X.rowwise() -= u.transpose(); // TODO: Revisar si esto funciona bien. Deberia tomar cada fila y restarle u
+    X /= sqrt(X.rows()-1);
 
-    Matrix M = X^t * X
+    // M = X^t*X
+    Matrix M = X.transpose() * X;
 
     // Conseguir los eigenvalues con el metodo de la potencia para todas las columnas de M (eigenvectors)
+    eigenvectors = get<1>(_calculate_eigenvalues(M, alpha, ITERACIONES));
 }
 
-pair<Vector, Matrix> calculate_eigenvalues(const Matrix X, uint num, uint num_iter, double epsilon) {
+pair<Vector, Matrix> PCA::_calculate_eigenvalues(const Matrix &X, uint num, uint num_iter) {
     Matrix A(X);
     Vector eigvalues(num);
     Matrix eigvectors(A.rows(), num);
@@ -44,8 +50,8 @@ pair<double, Vector> PCA::_power_method(Matrix A, uint iter) {
     Vector v = Vector::Random(A.cols());;
     uint i = 0;
 
-    queue<Vector> last_vectors;
-    queue.push(v);
+    deque<Vector> last_vectors;
+    last_vectors.push_back(v);
 
     while(i < iter) {
         v = (A * v) / (A * v).norm();
@@ -55,17 +61,19 @@ pair<double, Vector> PCA::_power_method(Matrix A, uint iter) {
             if(x != v) {
                 break;
             }
-            if(x == last_vectors.last()) {
-                int lambda = (v.transpose() * A * v) / ((A * v).norm()) ^ 2;
+            if(x == last_vectors.back()) {
+                double lambda = v.transpose() * A * v;
 
-                return make_pair(lambda, v)
+                lambda /= pow((A * v).squaredNorm(), 2);
+
+                return make_pair(lambda, v);
             }
         }
 
         // Agrego el vector encontrado a la lista de los ultimos n autovectores encontrados
-        queue.push(v);
+        last_vectors.push_back(v);
         if (last_vectors.size() > SEEN_VECTORS_AMOUNT) {
-            queue.pop();
+            last_vectors.pop_front();
         }
 
         i++;

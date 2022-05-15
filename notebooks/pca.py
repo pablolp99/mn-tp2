@@ -5,9 +5,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
 import sys
+import pathlib
 import logging
 
-sys.path.insert(1, '/home/pablo/UBA/comp2022/MN/mn-tp2/build')
+sys.path.insert(1, f"{pathlib.Path(__file__).parent.resolve()}/../build")
 from mnpkg import *
 
 logging.basicConfig(level="INFO")
@@ -27,26 +28,24 @@ class PCA(BaseEstimator):
         self.k_neighbors = k_neighbors
         self.model = PCACpp(k_neighbors)
 
-    def fit(self, X: pd.DataFrame, y: pd.Series):
+    def fit(self, X: pd.DataFrame):
         """Fit
 
         Parameters
         ----------
         X : pd.DataFrame
             DataFrame con los vectores de entrenamiento.
-        y : pd.Series
-            Series con las etiquetas de entrenamiento.
         """
         assert len(X) > 0
         assert len(X.iloc[0]) > 0
-        assert len(X) == len(y)
 
-        labels = y.tolist()
         imgs = []
         for i in range(len(X)):
             imgs.append(X.iloc[i].tolist())
 
-        self.model.fit(imgs, len(X))
+        breakpoint()
+
+        self.model.fit(imgs)
 
     def transform(self, X: pd.DataFrame):
         """Predictor
@@ -76,21 +75,21 @@ class PCA(BaseEstimator):
 
 
 if __name__ == '__main__':
-    pca = PCA(15)
+    pca = PCA(1)
 
     logger.info("Loading CSV")
-    df = pd.read_csv("../data/train.csv")
+    df = pd.read_csv("data/train.csv")
 
     y = df["label"]
     X = df.drop(columns='label')
 
     logger.info("Splitting")
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=100, random_state=RANDOM_STATE)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=5, random_state=RANDOM_STATE)
 
     logger.info(f"X,y train: {len(X_train)} - X,y test: {len(X_test)}")
 
     logger.info("Training")
-    pca.fit(X_train)
+    pca.fit(X_test)
 
     # logger.info("Predicting")
     # results = knn.predict(X_test)
