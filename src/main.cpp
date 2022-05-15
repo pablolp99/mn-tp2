@@ -15,7 +15,7 @@ PYBIND11_MODULE(mnpkg, m){
         .def("fit", &KNNClassifier::fit)
         .def("predict", &KNNClassifier::predict)
         .def_readwrite("k_", &KNNClassifier::k)
-        .def_readwrite("train_", &KNNClassifier::train)
+        .def_readwrite("train_", &KNNClassifier::training)
         .def_readwrite("target_", &KNNClassifier::target);
 
     // This function should not be exported to python

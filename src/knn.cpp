@@ -17,9 +17,9 @@ void KNNClassifier::fit(const std::vector<std::vector<int> > list, const std::ve
 }
 
 void KNNClassifier::_fit(Matrix X, Vector y) {
-    this->train = X;
+    this->training = X;
     this->target = y;
-    this->train_size = uint(X.rows());
+    this->training_size = uint(X.rows());
 }
 
 Vector KNNClassifier::predict(const std::vector<std::vector<int> > list){
@@ -41,8 +41,8 @@ int KNNClassifier::_predict(Vector x) {
     std::vector<pair<float, int> > dist;
 
     // Calculate distances to all training cases
-    for (int j = 0; j < train_size; ++j){
-        Vector v = train.row(j);
+    for (int j = 0; j < training_size; ++j){
+        Vector v = training.row(j);
         dist.push_back(make_pair( ((x - v).norm()) , target(j)));
     }
 

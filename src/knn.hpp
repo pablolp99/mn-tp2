@@ -15,9 +15,9 @@ class KNNClassifier {
         
         // Attributes
         uint k;
-        Matrix train;
+        Matrix training;
         Vector target;
-        uint train_size;
+        uint training_size;
 
     private:
         Vector pred_vector_;
