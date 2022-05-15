@@ -12,5 +12,7 @@ public:
 private:
     uint alpha;
     Matrix eigenvectors;
-    void power_method();
+
+    pair<double, Vector> PCA::_power_method(Matrix A, Vector x0, uint iter)
+    Matrix _deflate(const Matrix& A, pair<double, Vector> eigen);
 };
