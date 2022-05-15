@@ -16,7 +16,7 @@ void PCA::fit(const std::vector<std::vector<int> > list) {
     // Promedio de las imagenes
     Vector u = X.colwise().mean();
 
-    X.
+    X.rowwise() -= 
     // X_i = (x_i - \mu) / sqrt(n-1)
 
     Matrix M = X^t * X

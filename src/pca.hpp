@@ -4,15 +4,17 @@ using namespace std;
 
 class PCA {
 public:
+    // Constructor
     PCA(uint n_components);
 
+    // Methods
     void fit(Matrix X);
-
     Matrix transform(Matrix X);
-private:
+
+    //Attributes
     uint alpha;
     Matrix eigenvectors;
-
-    pair<double, Vector> PCA::_power_method(Matrix A, Vector x0, uint iter)
+private:
+    pair<double, Vector> _power_method(Matrix A, Vector x0, uint iter);
     Matrix _deflate(const Matrix& A, pair<double, Vector> eigen);
 };
