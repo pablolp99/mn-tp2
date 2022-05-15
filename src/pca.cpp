@@ -89,5 +89,5 @@ Matrix _deflate(const Matrix& A, pair<double, Vector> eigen) {
 }
 
 Matrix PCA::transform(Matrix X) {
-    return X * this->eigenvectors;
+    return X * eigenvectors;
 }
