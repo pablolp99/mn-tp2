@@ -3,6 +3,7 @@
 
 using namespace std;
 
+
 class KNNClassifier {
     public:
         // Constructor
@@ -19,8 +20,11 @@ class KNNClassifier {
         uint train_size;
 
     private:
+        Vector pred_vector_;
+
         // Private methods
         void _fit(Matrix X, Vector y);
-        Vector _predict(Matrix X);
-        uint _predict_vector(Vector x);
+        int _predict(Vector x);
+        std::vector<pair<float, int> > calculate_distances(Vector x);
+        // int _predict_vector(Vector x);
 };

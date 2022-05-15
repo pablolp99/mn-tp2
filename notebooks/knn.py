@@ -1,11 +1,18 @@
 import pandas as pd
-import sys
 
 from sklearn.base import BaseEstimator
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+import sys
+import logging
 
 sys.path.insert(1, '/home/pablo/UBA/comp2022/MN/mn-tp2/build')
 from mnpkg import *
+
+logging.basicConfig(level="INFO")
+logger = logging.getLogger(__name__)
+
 
 RANDOM_STATE = 42
 
@@ -41,7 +48,7 @@ class KNNClassifier(BaseEstimator):
 
         self.model.fit(imgs, labels, len(X), len(X.iloc[0]))
 
-    def predict(self, X: pd.DataFrame) -> pd.Series:
+    def predict(self, X: pd.DataFrame):
         """Predictor
 
         Parameters
@@ -61,24 +68,31 @@ class KNNClassifier(BaseEstimator):
         for i in range(len(X)):
             imgs.append(X.iloc[i].tolist())
 
-        pred = self.model.predict(imgs, len(imgs), len(imgs.iloc[0]))
-        return pd.Series(pred)
+        pred = self.model.predict(imgs, len(imgs), len(imgs[0]))
+        return pd.Series(pred).astype(int)
 
     def get_model(self):
         return self.model
 
 
 if __name__ == '__main__':
-    knn = KNNClassifier(3)
+    knn = KNNClassifier(15)
     
+    logger.info("Loading CSV")
     df = pd.read_csv("../data/train.csv")
 
     y = df["label"]
     X = df.drop(columns='label')
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=RANDOM_STATE)
+    logger.info("Splitting")
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=100, random_state=RANDOM_STATE)
 
+    logger.info(f"X,y train: {len(X_train)} - X,y test: {len(X_test)}")
+
+    logger.info("Training")
     knn.fit(X_train, y_train)
-    breakpoint()
+    
+    logger.info("Predicting")
+    results = knn.predict(X_test)
 
-    print(knn)
+    logger.info("Accuracy: %f" % (accuracy_score(y_test, results)))
