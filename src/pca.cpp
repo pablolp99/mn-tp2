@@ -9,7 +9,7 @@ PCA::PCA(uint n_components) {
 }
 
 void PCA::fit(const std::vector<std::vector<int> > list) {
-    Matrix X = read_input_data(list, 5, 5);
+    Matrix X = read_input_data(list);
 
     // n = filas de X
 
