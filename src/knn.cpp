@@ -2,10 +2,10 @@
 #include <iostream>
 #include <map>
 #include "omp.h"
-#include "tqdm.h"
 
-#include "utils.hpp"
 #include "knn.hpp"
+#include "progressbar.hpp"
+#include "utils.hpp"
 
 KNNClassifier::KNNClassifier(uint k_neighbors) {
     this->k = k_neighbors;
@@ -27,11 +27,13 @@ Vector KNNClassifier::predict(const std::vector<std::vector<int> > list){
     Matrix X = read_input_data(list);
 
     Vector res(X.rows());
-    
+    progressbar bar(X.rows());
+
     #pragma omp parallel for
     for (uint i = 0; i < X.rows(); ++i){
         Vector x = X.row(i);
         res(i) = _predict(x);
+        bar.update();
     }
 
     return res;
