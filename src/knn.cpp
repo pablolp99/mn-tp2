@@ -2,6 +2,7 @@
 #include <iostream>
 #include <map>
 #include "omp.h"
+#include "tqdm.h"
 
 #include "utils.hpp"
 #include "knn.hpp"
