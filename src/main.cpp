@@ -1,6 +1,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/eigen.h>
 #include "knn.hpp"
+#include "pca.hpp"
 #include "utils.hpp"
 
 namespace py = pybind11;
@@ -18,6 +19,14 @@ PYBIND11_MODULE(mnpkg, m){
         .def_readwrite("train_", &KNNClassifier::train)
         .def_readwrite("target_", &KNNClassifier::target);
 
-    // This function should not be exported to python
+    py::class_<PCA> pca(m, "PCACpp");
+    pca.def(py::init<uint &>(), py::arg("k_neighbors"))
+        .def("fit", &PCA::fit)
+        .def("transform", &PCA::transform)
+        .def_readwrite("alpha_", &PCA::alpha)
+        .def_readwrite("eigenvectors_", &PCA::eigenvectors);
+
+
+// This function should not be exported to python
     // m.def("read_img", &read_input_data, "Convert Python list to Eigen representation");
 }
