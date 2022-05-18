@@ -1,16 +1,18 @@
 #include <iostream>
+#include <deque>
+
+#include "progressbar.hpp"
 #include "pca.hpp"
 #include "utils.hpp"
-
-#include <deque>
 
 using namespace std;
 
 #define SEEN_VECTORS_AMOUNT 5
 #define ITERACIONES 5000
 
-PCA::PCA(uint n_components) {
-    this->alpha = n_components;
+PCA::PCA(uint alpha, double epsilon) {
+    this->alpha = alpha;
+    this->eps = epsilon;
 }
 
 void PCA::fit(const std::vector<std::vector<int>> list) {
@@ -27,56 +29,53 @@ void PCA::fit(const std::vector<std::vector<int>> list) {
     Matrix M = X.transpose() * X;
 
     // Conseguir los eigenvalues con el metodo de la potencia para todas las columnas de M (eigenvectors)
-    eigenvectors = get<1>(_calculate_eigenvalues(M, alpha, ITERACIONES));
+    eigenvectors = get<1>(_calculate_eigenvalues(M));
 }
 
-pair<Vector, Matrix> PCA::_calculate_eigenvalues(const Matrix &X, uint num, uint num_iter) {
+pair<Vector, Matrix> PCA::_calculate_eigenvalues(const Matrix &X) {
     Matrix A(X);
-    Vector eigvalues(num);
-    Matrix eigvectors(A.rows(), num);
+    Vector eigvalues(alpha);
+    Matrix eigvectors(A.rows(), alpha);
 
-    for(uint i = 0; i < num; i++){
-        pair<double, Vector> eigen = _power_method(A, num_iter);
+    progressbar bar(alpha);
+
+    for(uint i = 0; i < alpha; i++){
+        pair<double, Vector> eigen = _power_method(A);
         eigvalues(i) = get<0>(eigen);
         eigvectors.col(i) = get<1>(eigen);
         A = _deflate(A, eigen);
+        bar.update();
     }
+    std::cout << std::endl;
 
     return make_pair(eigvalues, eigvectors);
 }
 
-pair<double, Vector> PCA::_power_method(Matrix A, uint iter) {
-    Vector v = Vector::Random(A.cols());;
+pair<double, Vector> PCA::_power_method(Matrix A) {
+    // Vector v = Vector::Random(A.rows());
+    Vector v = init_random_vector(A.rows());
+    double lambda = 0;
     uint i = 0;
 
-    deque<Vector> last_vectors;
-    last_vectors.push_back(v);
+    Vector last_vector;
 
-    while(i < iter) {
+    while(i < ITERACIONES) {
         v = (A * v) / (A * v).norm();
-
-        // Miro los ultimos n autovectores encontrados y veo si no cambio en mucho tiempo
-        for (Vector x : last_vectors) {
-            if(x != v) {
-                break;
-            }
-            if(x == last_vectors.back()) {
-                double lambda = v.transpose() * A * v;
-                lambda /= pow((A * v).squaredNorm(), 2);
-                return make_pair(lambda, v);
-            }
+        double _tmp_num = (v.transpose() * A * v);
+        double _tmp_den = (v.transpose() * v);
+        lambda = _tmp_num / _tmp_den ;
+        
+        if((i > 0) && (v - last_vector).isZero(eps)) {
+            return make_pair(lambda, v);
         }
 
-        // Agrego el vector encontrado a la lista de los ultimos n autovectores encontrados
-        last_vectors.push_back(v);
-        if (last_vectors.size() > SEEN_VECTORS_AMOUNT) {
-            last_vectors.pop_front();
-        }
+        last_vector = v;
 
         i++;
     }
 
-    throw invalid_argument( "No se pudo encontrar el eigenvalue" );
+    return make_pair(lambda, v);
+    // throw invalid_argument( "No se pudo encontrar el eigenvalue" );
 }
 
 Matrix PCA::_deflate(const Matrix& A, pair<double, Vector> eigen) {

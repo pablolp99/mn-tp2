@@ -1,8 +1,10 @@
 import pandas as pd
+import plotly.express as px
 
 from sklearn.base import BaseEstimator
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+import sklearn.decomposition as skld
 
 import sys
 import pathlib
@@ -18,15 +20,15 @@ logger = logging.getLogger(__name__)
 RANDOM_STATE = 42
 
 class PCA(BaseEstimator):
-    def __init__(self, k_neighbors: int = 5):
+    def __init__(self, alpha: int = 5, epsilon = 0.00001):
         """Constructor
 
         Parameters
         ----------
-        k_neighbors : int, optional, by default 5.
+        
         """
-        self.k_neighbors = k_neighbors
-        self.model = PCACpp(k_neighbors)
+        self.model = PCACpp(alpha, epsilon)
+
 
     def fit(self, X: pd.DataFrame):
         """Fit
@@ -43,23 +45,10 @@ class PCA(BaseEstimator):
         for i in range(len(X)):
             imgs.append(X.iloc[i].tolist())
 
-        breakpoint()
-
         self.model.fit(imgs)
 
+
     def transform(self, X: pd.DataFrame):
-        """Predictor
-
-        Parameters
-        ----------
-        X : pd.DataFrame
-            DataFrame con vectores a predecir.
-
-        Returns
-        -------
-        pd.Series
-            Etiquetas predecidas para cada vector.
-        """
         assert len(X) > 0
         assert len(X.iloc[0]) > 0
 
@@ -67,31 +56,46 @@ class PCA(BaseEstimator):
         for i in range(len(X)):
             imgs.append(X.iloc[i].tolist())
 
-        pred = self.model.predict(imgs, len(imgs), len(imgs[0]))
-        return pd.Series(pred).astype(int)
+        transformed = self.model.transform(imgs)
+        return transformed
+
+
+    def fit_transform(self, X: pd.DataFrame):
+        self.fit(X)
+        return self.transform(X)
+
 
     def get_model(self):
         return self.model
 
 
 if __name__ == '__main__':
-    pca = PCA(1)
+    pca_ours = PCA(3)
 
     logger.info("Loading CSV")
-    df = pd.read_csv("data/train.csv")
+    df = pd.read_csv("../data/train.csv")[:1000]
 
-    y = df["label"]
-    X = df.drop(columns='label')
+    # logger.info("Training")
+    # pca.fit(X)
 
-    logger.info("Splitting")
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=5, random_state=RANDOM_STATE)
+    logger.info("Transforming")
+    transformed = pca_ours.fit_transform(df.drop(columns='label'))
 
-    logger.info(f"X,y train: {len(X_train)} - X,y test: {len(X_test)}")
+    df['pca_0_ours'] = transformed[:,0]
+    df['pca_1_ours'] = transformed[:,1]
+    df['pca_2_ours'] = transformed[:,2]
 
-    logger.info("Training")
-    pca.fit(X_test)
+    logger.info("Plotting")
 
-    # logger.info("Predicting")
-    # results = knn.predict(X_test)
-    #
-    # logger.info("Accuracy: %f" % (accuracy_score(y_test, results)))
+    df['label'] = df['label'].astype(str)
+    fig = px.scatter_3d(df, x="pca_0_ours", y="pca_1_ours", z="pca_2_ours", color="label", title='Ours')
+    fig.show()
+
+
+    pca_sk = skld.PCA(n_components=3)
+    transformed_sk = pca_sk.fit_transform(df.drop(columns='label'))
+    df['pca_0_sk'] = transformed_sk[:,0]
+    df['pca_1_sk'] = transformed_sk[:,1]
+    df['pca_2_sk'] = transformed_sk[:,2]
+    fig = px.scatter_3d(df, x="pca_0_sk", y="pca_1_sk", z="pca_2_sk", color="label", title="Sklearn")
+    fig.show()

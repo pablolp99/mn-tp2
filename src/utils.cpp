@@ -3,6 +3,8 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/eigen.h>
 #include <pybind11/stl.h>
+#include <Eigen/Dense>
+
 #include "utils.hpp"
 
 namespace py = pybind11;
@@ -35,4 +37,8 @@ Vector read_input_label(const std::vector<int> list) {
         ++i;
     }
     return result;
+}
+
+Vector init_random_vector(uint size){
+    return Eigen::VectorXd::Random(size);
 }

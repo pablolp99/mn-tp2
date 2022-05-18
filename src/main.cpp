@@ -20,13 +20,9 @@ PYBIND11_MODULE(mnpkg, m){
         .def_readwrite("target_", &KNNClassifier::target);
 
     py::class_<PCA> pca(m, "PCACpp");
-    pca.def(py::init<uint &>(), py::arg("k_neighbors"))
+    pca.def(py::init<uint &, double &>(), py::arg("alpha"), py::arg("epsilon"))
         .def("fit", &PCA::fit)
         .def("transform", &PCA::transform)
         .def_readwrite("alpha_", &PCA::alpha)
         .def_readwrite("eigenvectors_", &PCA::eigenvectors);
-
-
-// This function should not be exported to python
-    // m.def("read_img", &read_input_data, "Convert Python list to Eigen representation");
 }
