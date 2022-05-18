@@ -2,8 +2,8 @@ import pandas as pd
 from tqdm import tqdm
 
 from sklearn.base import BaseEstimator
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, precision_recall_fscore_support
+from sklearn.metrics import accuracy_score, make_scorer, precision_recall_fscore_support
+from sklearn.model_selection import cross_val_score, train_test_split
 
 import logging
 import sys
@@ -20,15 +20,15 @@ RANDOM_STATE = 42
 
 
 class KNNClassifier(BaseEstimator):
-    def __init__(self, k_neighbors: int = 5):
+    def __init__(self, k: int = 5):
         """Constructor
 
         Parameters
         ----------
-        k_neighbors : int, optional, by default 5.
+        k : int, optional, by default 5.
         """
-        self.k_neighbors = k_neighbors
-        self.model = KNNClassifierCpp(k_neighbors)
+        self.k = k
+        self.model = KNNClassifierCpp(k)
 
     def fit(self, X: pd.DataFrame, y: pd.Series):
         """Fit
@@ -74,7 +74,7 @@ class KNNClassifier(BaseEstimator):
         pred = self.model.predict(imgs)
         return pd.Series(pred).astype(int)
 
-    def get_params(self):
+    def get_params(self, deep=True):
         return {"k": self.k}
 
     def get_model(self):
@@ -84,39 +84,27 @@ class KNNClassifier(BaseEstimator):
 if __name__ == "__main__":
     start_time = time.time()
 
-    knn = KNNClassifier(15)
-
     logger.info("Loading CSV")
-    df = pd.read_csv("../data/train.csv")
+    df = pd.read_csv("../data/train.csv")[:5000]
 
     y = df["label"]
     X = df.drop(columns="label")
 
     logger.info("Splitting")
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=100, random_state=RANDOM_STATE
+        X, y, random_state=RANDOM_STATE
     )
 
     logger.info(f"X,y train: {len(X_train)} - X,y test: {len(X_test)}")
 
-    logger.info("Training")
-    knn.fit(X_train, y_train)
 
-    logger.info("Predicting")
-
-    predict_s_time = time.time()
-    results = knn.predict(X_test)
-    end_time = time.time()
-
-    logger.info(f"--- Total compute time: {end_time - start_time} seconds ---")
-    logger.info(f"--- Prediction compute time: {end_time - predict_s_time} seconds ---")
-
-    logger.info("Global accuracy: %f" % (accuracy_score(y_test, results)))
-
-    metrics = zip(
-        ["precision", "recall", "fbeta_score", "support"],
-        [i.tolist() for i in precision_recall_fscore_support(y_test, results)],
+    logger.info("Running cross-validation")
+    scores = cross_val_score(
+        KNNClassifier(10),
+        X,
+        y,
+        cv=5,
+        scoring=make_scorer(accuracy_score),
     )
 
-    for r in metrics:
-        logger.info(f"{r[0]}: {r[1]}")
+    logger.info(scores)
