@@ -9,7 +9,7 @@ public:
 
     // Methods
     void fit(const std::vector<std::vector<int>> list);
-    Matrix transform(Matrix X);
+    Matrix transform(const std::vector<std::vector<int>> list);
 
     //Attributes
     uint alpha;
