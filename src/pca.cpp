@@ -14,7 +14,7 @@ PCA::PCA(uint n_components) {
 }
 
 void PCA::fit(const std::vector<std::vector<int>> list) {
-    Matrix X = read_input_data(list, list.size(), list[0].size());
+    Matrix X = read_input_data(list);
 
     // Promedio de las imagenes
     Vector u = X.colwise().mean();
@@ -82,7 +82,7 @@ pair<double, Vector> PCA::_power_method(Matrix A, uint iter) {
     throw invalid_argument( "No se pudo encontrar el eigenvalue" );
 }
 
-Matrix _deflate(const Matrix& A, pair<double, Vector> eigen) {
+Matrix PCA::_deflate(const Matrix& A, pair<double, Vector> eigen) {
     double eigenval = get<0>(eigen);
     Vector eigenvec = get<1>(eigen);
     return  A - (eigenval * eigenvec * eigenvec.transpose());
