@@ -9,8 +9,8 @@ import logging
 import sys
 import time
 
-sys.path.insert(1, '../build')
-from mnpkg import *
+sys.path.insert(1, "../build")
+from metnum_pkg import *
 
 logging.basicConfig(level="INFO")
 logger = logging.getLogger(__name__)
@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 
 RANDOM_STATE = 42
 
-class KNNClassifier(BaseEstimator):
 
+class KNNClassifier(BaseEstimator):
     def __init__(self, k_neighbors: int = 5):
         """Constructor
 
@@ -29,7 +29,6 @@ class KNNClassifier(BaseEstimator):
         """
         self.k_neighbors = k_neighbors
         self.model = KNNClassifierCpp(k_neighbors)
-
 
     def fit(self, X: pd.DataFrame, y: pd.Series):
         """Fit
@@ -44,14 +43,13 @@ class KNNClassifier(BaseEstimator):
         assert len(X) > 0
         assert len(X.iloc[0]) > 0
         assert len(X) == len(y)
-        
+
         labels = y.tolist()
         imgs = []
         for i in range(len(X)):
             imgs.append(X.iloc[i].tolist())
 
         self.model.fit(imgs, labels)
-
 
     def predict(self, X: pd.DataFrame):
         """Predictor
@@ -76,46 +74,49 @@ class KNNClassifier(BaseEstimator):
         pred = self.model.predict(imgs)
         return pd.Series(pred).astype(int)
 
-
     def get_params(self):
-        return { "k": self.k }
-
+        return {"k": self.k}
 
     def get_model(self):
         return self.model
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     start_time = time.time()
-    
+
     knn = KNNClassifier(15)
-    
+
     logger.info("Loading CSV")
     df = pd.read_csv("../data/train.csv")
 
     y = df["label"]
-    X = df.drop(columns='label')
+    X = df.drop(columns="label")
 
     logger.info("Splitting")
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=100, random_state=RANDOM_STATE)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=100, random_state=RANDOM_STATE
+    )
 
     logger.info(f"X,y train: {len(X_train)} - X,y test: {len(X_test)}")
 
     logger.info("Training")
     knn.fit(X_train, y_train)
-    
+
     logger.info("Predicting")
-    
+
     predict_s_time = time.time()
     results = knn.predict(X_test)
     end_time = time.time()
 
-    logger.info(f"--- Total compute time: {end_time - start_time} seconds ---" )
-    logger.info(f"--- Prediction compute time: {end_time - predict_s_time} seconds ---" )
+    logger.info(f"--- Total compute time: {end_time - start_time} seconds ---")
+    logger.info(f"--- Prediction compute time: {end_time - predict_s_time} seconds ---")
 
     logger.info("Global accuracy: %f" % (accuracy_score(y_test, results)))
-    
-    metrics = zip(["precision", "recall", "fbeta_score", "support"], [i.tolist() for i in precision_recall_fscore_support(y_test, results)])
+
+    metrics = zip(
+        ["precision", "recall", "fbeta_score", "support"],
+        [i.tolist() for i in precision_recall_fscore_support(y_test, results)],
+    )
 
     for r in metrics:
         logger.info(f"{r[0]}: {r[1]}")

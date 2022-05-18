@@ -52,7 +52,6 @@ pair<Vector, Matrix> PCA::_calculate_eigenvalues(const Matrix &X) {
 }
 
 pair<double, Vector> PCA::_power_method(Matrix A) {
-    // Vector v = Vector::Random(A.rows());
     Vector v = init_random_vector(A.rows());
     double lambda = 0;
     uint i = 0;
@@ -75,7 +74,6 @@ pair<double, Vector> PCA::_power_method(Matrix A) {
     }
 
     return make_pair(lambda, v);
-    // throw invalid_argument( "No se pudo encontrar el eigenvalue" );
 }
 
 Matrix PCA::_deflate(const Matrix& A, pair<double, Vector> eigen) {
@@ -86,6 +84,5 @@ Matrix PCA::_deflate(const Matrix& A, pair<double, Vector> eigen) {
 
 Matrix PCA::transform(const std::vector<std::vector<int>> list) {
     Matrix X = read_input_data(list);
-
     return X * eigenvectors;
 }

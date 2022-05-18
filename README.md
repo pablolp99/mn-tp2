@@ -1,8 +1,25 @@
 # mn-tp2
 TP2 - Metodos Numericos
 
-## Python 3.10
-En el presente trabajo se utilizara `python3.10` para el desarrollo.
+## Python 3.10-dev
+En el presente trabajo se utilizara `python3.10-dev` para el desarrollo y experimentacion.
+
+### Instalacion de Python 3.10-dev
+Para utilizar dicha version de Python recomendamos el uso de `pyenv` para instalar dicha version. De la siguiente forma se puede instalar.
+```bash
+$ curl https://pyenv.run | bash
+$ exec $SHELL
+```
+
+Una vez pyenv instalado, para obtener la version `3.10-dev` basta con
+```bash
+pyenv install 3.10
+```
+
+Con el archivo que se encuentra en el root del proyecto (`.python-version`) el mismo entorno deberia entrar en funcionamiento. De ser necesario, se pueden utilizar entornos virtuales para relizar las ejecuciones.
+
+
+
 
 ## Sklearn compliance
 Para poder utilizar las funncionalidades de `sklearn`, tales como `GridSearch` y `CrossValidation`, se armaran objetos que sigan la interfaz de la misma libreria.

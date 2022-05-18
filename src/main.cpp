@@ -8,7 +8,7 @@ namespace py = pybind11;
 
 // Documentation: https://pybind11.readthedocs.io/en/stable/classes.html
 
-PYBIND11_MODULE(mnpkg, m){
+PYBIND11_MODULE(metnum_pkg, m){
     m.doc() = "Metodos Numericos Package - Implementacion de KNN y PCA";
 
     py::class_<KNNClassifier> knn(m, "KNNClassifierCpp");
