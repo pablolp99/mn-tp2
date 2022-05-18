@@ -80,12 +80,10 @@ class KNNClassifier(BaseEstimator):
         return {"k": self.k}
 
 
-    def set_params(self, params: dict={}):
-        assert bool(params)
-        k = params.get("k", None)
-
+    def set_params(self, k):
         if k is not None:
             self.model = KNNClassifierCpp(k)
+        return self
 
 
     def get_model(self):

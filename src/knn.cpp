@@ -11,6 +11,18 @@ KNNClassifier::KNNClassifier(uint k_neighbors) {
     this->k = k_neighbors;
 }
 
+void KNNClassifier::set_train(const Matrix& train) {
+    this->train = train;
+}
+
+void KNNClassifier::set_target(const Vector& target) {
+    this->target = target;
+}
+
+void KNNClassifier::set_train_size(const uint& train_size) {
+    this->train_size = train_size;
+}
+
 void KNNClassifier::fit(const std::vector<std::vector<int> > list, const std::vector<int> label){
     Matrix X = read_input_data(list);
     Vector y = read_input_label(label);
