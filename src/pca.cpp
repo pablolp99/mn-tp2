@@ -20,7 +20,7 @@ void PCA::fit(const std::vector<std::vector<int>> list) {
     Vector u = X.colwise().mean();
 
     // X_i = (x_i - \mu)^t / sqrt(n-1)
-    X.rowwise() -= u.transpose(); // TODO: Revisar si esto funciona bien. Deberia tomar cada fila y restarle u
+    X.rowwise() -= u.transpose();
     X /= sqrt(X.rows()-1);
 
     // M = X^t*X
@@ -36,7 +36,6 @@ pair<Vector, Matrix> PCA::_calculate_eigenvalues(const Matrix &X, uint num, uint
     Matrix eigvectors(A.rows(), num);
 
     for(uint i = 0; i < num; i++){
-
         pair<double, Vector> eigen = _power_method(A, num_iter);
         eigvalues(i) = get<0>(eigen);
         eigvectors.col(i) = get<1>(eigen);
@@ -63,9 +62,7 @@ pair<double, Vector> PCA::_power_method(Matrix A, uint iter) {
             }
             if(x == last_vectors.back()) {
                 double lambda = v.transpose() * A * v;
-
                 lambda /= pow((A * v).squaredNorm(), 2);
-
                 return make_pair(lambda, v);
             }
         }
@@ -82,7 +79,7 @@ pair<double, Vector> PCA::_power_method(Matrix A, uint iter) {
     throw invalid_argument( "No se pudo encontrar el eigenvalue" );
 }
 
-Matrix _deflate(const Matrix& A, pair<double, Vector> eigen) {
+Matrix PCA::_deflate(const Matrix& A, pair<double, Vector> eigen) {
     double eigenval = get<0>(eigen);
     Vector eigenvec = get<1>(eigen);
     return  A - (eigenval * eigenvec * eigenvec.transpose());
