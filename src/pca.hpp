@@ -11,6 +11,9 @@ public:
     void fit(const std::vector<std::vector<int>> list);
     Matrix transform(const std::vector<std::vector<int>> list);
 
+    void set_alpha(uint alpha);
+    void set_eigenvectors(Matrix eigenvectors);
+
     //Attributes
     uint alpha;
     Matrix eigenvectors;

@@ -15,6 +15,14 @@ PCA::PCA(uint alpha, double epsilon) {
     this->eps = epsilon;
 }
 
+void set_alpha(uint alpha) {
+    this->alpha = alpha;
+}
+
+void set_eigenvectors(Matrix eigenvectors) {
+    this->eigenvectors = eigenvectors;
+}
+
 void PCA::fit(const std::vector<std::vector<int>> list) {
     Matrix X = read_input_data(list);
 
