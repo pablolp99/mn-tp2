@@ -35,6 +35,7 @@ Vector KNNClassifier::predict(const std::vector<std::vector<int> > list){
         res(i) = _predict(x);
         bar.update();
     }
+    std::cout << std::endl;
 
     return res;
 }
