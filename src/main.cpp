@@ -45,5 +45,23 @@ PYBIND11_MODULE(metnum_pkg, m){
         .def("fit", &PCA::fit)
         .def("transform", &PCA::transform)
         .def_readwrite("alpha_", &PCA::alpha)
-        .def_readwrite("eigenvectors_", &PCA::eigenvectors);
+        .def_readwrite("eigenvectors_", &PCA::eigenvectors)
+        .def(py::pickle(
+            [](const PCA &pca_classifier) { // __getstate__
+                /* Return a tuple that fully encodes the state of the object */
+                return py::make_tuple(pca_classifier.alpha, pca_classifier.epsilon, pca_classifier.eigenvectors);
+            },
+            [](py::tuple pca_tuple_representation) { // __setstate__
+                if (pca_tuple_representation.size() != 3)
+                    throw std::runtime_error("Invalid state!");
+
+                /* Create a new C++ instance */
+                PCA pca_classifier(pca_tuple_representation[0].cast<uint>(), pca_tuple_representation[1].cast<double>());
+
+                /* Assign any additional state */
+                pca_classifier.set_eigenvectors(pca_tuple_representation[2].cast<Matrix>());
+
+                return pca_classifier;
+            }
+        ));
 }

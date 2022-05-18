@@ -12,14 +12,10 @@ using namespace std;
 
 PCA::PCA(uint alpha, double epsilon) {
     this->alpha = alpha;
-    this->eps = epsilon;
+    this->epsilon = epsilon;
 }
 
-void set_alpha(uint alpha) {
-    this->alpha = alpha;
-}
-
-void set_eigenvectors(Matrix eigenvectors) {
+void PCA::set_eigenvectors(Matrix eigenvectors) {
     this->eigenvectors = eigenvectors;
 }
 
@@ -72,7 +68,7 @@ pair<double, Vector> PCA::_power_method(Matrix A) {
         double _tmp_den = (v.transpose() * v);
         lambda = _tmp_num / _tmp_den ;
         
-        if((i > 0) && (v - last_vector).isZero(eps)) {
+        if((i > 0) && (v - last_vector).isZero(epsilon)) {
             return make_pair(lambda, v);
         }
 
