@@ -16,6 +16,6 @@ include_directories(include/eigen)
 add_subdirectory(include/pybind11)
 # add_subdirectory(include/tqdm)
 
-pybind11_add_module(mnpkg src/main.cpp src/knn.cpp src/utils.cpp)
-# pybind11_add_module(mnpkg src/main.cpp src/knn.cpp src/pca.cpp src/utils.cpp)
+# pybind11_add_module(mnpkg src/main.cpp src/knn.cpp src/utils.cpp)
+pybind11_add_module(mnpkg src/main.cpp src/knn.cpp src/pca.cpp src/utils.cpp)
 target_link_libraries(mnpkg PRIVATE Eigen3::Eigen)
