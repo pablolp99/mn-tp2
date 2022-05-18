@@ -28,7 +28,7 @@ void PCA::fit(const std::vector<std::vector<int>> list) {
     // M = X^t*X
     Matrix M = X.transpose() * X;
 
-    // Conseguir los eigenvalues con el metodo de la potencia para todas las columnas de M (eigenvectors)
+    // Calcular los autovectores mediante el metodo de la potencia
     eigenvectors = get<1>(_calculate_eigenvalues(M));
 }
 
@@ -40,10 +40,10 @@ pair<Vector, Matrix> PCA::_calculate_eigenvalues(const Matrix &X) {
     progressbar bar(alpha);
 
     for(uint i = 0; i < alpha; i++){
-        pair<double, Vector> eigen = _power_method(A);
-        eigvalues(i) = get<0>(eigen);
-        eigvectors.col(i) = get<1>(eigen);
-        A = _deflate(A, eigen);
+        pair<double, Vector> eigen_val_and_vec = _power_method(A);
+        eigvalues(i) = get<0>(eigen_val_and_vec);
+        eigvectors.col(i) = get<1>(eigen_val_and_vec);
+        A = _deflate(A, eigen_val_and_vec);
         bar.update();
     }
     std::cout << std::endl;
@@ -76,9 +76,9 @@ pair<double, Vector> PCA::_power_method(Matrix A) {
     return make_pair(lambda, v);
 }
 
-Matrix PCA::_deflate(const Matrix& A, pair<double, Vector> eigen) {
-    double eigenval = get<0>(eigen);
-    Vector eigenvec = get<1>(eigen);
+Matrix PCA::_deflate(const Matrix& A, pair<double, Vector> eigen_val_and_vec) {
+    double eigenval = get<0>(eigen_val_and_vec);
+    Vector eigenvec = get<1>(eigen_val_and_vec);
     return  A - (eigenval * eigenvec * eigenvec.transpose());
 }
 
