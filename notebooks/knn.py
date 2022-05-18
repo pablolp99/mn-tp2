@@ -9,7 +9,7 @@ import logging
 import sys
 import time
 
-sys.path.insert(1, '/home/pablo/UBA/comp2022/MN/mn-tp2/build')
+sys.path.insert(1, '../build')
 from mnpkg import *
 
 logging.basicConfig(level="INFO")
@@ -97,7 +97,7 @@ if __name__ == '__main__':
     X = df.drop(columns='label')
 
     logger.info("Splitting")
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=2500, random_state=RANDOM_STATE)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=100, random_state=RANDOM_STATE)
 
     logger.info(f"X,y train: {len(X_train)} - X,y test: {len(X_test)}")
 
