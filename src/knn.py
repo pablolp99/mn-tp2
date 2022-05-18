@@ -1,5 +1,4 @@
 import pandas as pd
-from tqdm import tqdm
 
 from sklearn.base import BaseEstimator
 from sklearn.metrics import accuracy_score, make_scorer, precision_recall_fscore_support
