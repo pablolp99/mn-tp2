@@ -7,7 +7,10 @@
 
 namespace py = pybind11;
 
-Matrix read_input_data(const std::vector<std::vector<int> > list, uint imgs, uint img_size) {
+Matrix read_input_data(const std::vector<std::vector<int> > list) {
+    uint imgs = list.size();
+    uint img_size = list.at(0).size();
+
     Matrix result(imgs, img_size);
 
     uint i = 0;
@@ -22,7 +25,8 @@ Matrix read_input_data(const std::vector<std::vector<int> > list, uint imgs, uin
     return result;
 }
 
-Vector read_input_label(const std::vector<int> list, uint imgs) {
+Vector read_input_label(const std::vector<int> list) {
+    uint imgs = list.size();
     Vector result(imgs);
 
     uint i = 0;

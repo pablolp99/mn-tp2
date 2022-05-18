@@ -1,16 +1,19 @@
 #include <algorithm>
 #include <iostream>
 #include <map>
-#include "knn.hpp"
+#include "omp.h"
+#include "tqdm.h"
+
 #include "utils.hpp"
+#include "knn.hpp"
 
 KNNClassifier::KNNClassifier(uint k_neighbors) {
     this->k = k_neighbors;
 }
 
-void KNNClassifier::fit(const std::vector<std::vector<int> > list, const std::vector<int> label, uint imgs, uint img_size){
-    Matrix X = read_input_data(list, imgs, img_size);
-    Vector y = read_input_label(label, imgs);
+void KNNClassifier::fit(const std::vector<std::vector<int> > list, const std::vector<int> label){
+    Matrix X = read_input_data(list);
+    Vector y = read_input_label(label);
     _fit(X, y);
 }
 
@@ -20,13 +23,13 @@ void KNNClassifier::_fit(Matrix X, Vector y) {
     this->train_size = uint(X.rows());
 }
 
-Vector KNNClassifier::predict(const std::vector<std::vector<int> > list, uint imgs, uint img_size){
-    Matrix X = read_input_data(list, imgs, img_size);
+Vector KNNClassifier::predict(const std::vector<std::vector<int> > list){
+    Matrix X = read_input_data(list);
 
     Vector res(X.rows());
     
+    #pragma omp parallel for
     for (uint i = 0; i < X.rows(); ++i){
-        std::cout << i << std::endl;
         Vector x = X.row(i);
         res(i) = _predict(x);
     }
