@@ -4,8 +4,8 @@
 #include "omp.h"
 
 #include "knn.hpp"
-#include "progressbar.hpp"
 #include "utils.hpp"
+// #include "progressbar.hpp"
 
 KNNClassifier::KNNClassifier(uint k_neighbors) {
     this->k = k_neighbors;
@@ -39,14 +39,11 @@ Vector KNNClassifier::predict(const std::vector<std::vector<int> > list){
     Matrix X = read_input_data(list);
 
     Vector res(X.rows());
-    progressbar bar(X.rows());
 
     #pragma omp parallel for
     for (uint i = 0; i < X.rows(); ++i){
         Vector x = X.row(i);
         res(i) = _predict(x);
-        bar.update();
-        std::cout << std::endl;
     }
 
     return res;
@@ -54,32 +51,40 @@ Vector KNNClassifier::predict(const std::vector<std::vector<int> > list){
 
 int KNNClassifier::_predict(Vector x) {
     // KNN Algorithm
-    std::vector<pair<float, int> > dist;
+    Vector distances(train_size);
+    Vector indexes(train_size);
 
     // Calculate distances to all training cases
+    #pragma omp parallel for
     for (int j = 0; j < train_size; ++j){
         Vector v = train.row(j);
-        dist.push_back(make_pair( ((x - v).norm()) , target(j)));
+        distances(j) = ((x - v).norm());
+        indexes(j) = target(j);
+    }
+
+    std::vector<pair<float, int> > dist_idx;
+    for (int j = 0; j < train_size; ++j){
+        dist_idx.push_back(make_pair(distances(j), int(indexes(j))));
     }
 
     // Sort (smallest to largest)
-    sort(dist.begin(), dist.end());
+    sort(dist_idx.begin(), dist_idx.end());
 
     // Vote for the most suitable result
     std::map<uint, uint> count_map;
 
     for (uint j = 0; j < k; j++) {
         // Key exists in map
-        if ( count_map.find(dist[j].second) == count_map.end() ) {
-            count_map[dist[j].second] = 1;
+        if ( count_map.find(dist_idx[j].second) == count_map.end() ) {
+            count_map[dist_idx[j].second] = 1;
         } else {
-            count_map[dist[j].second] += 1;
+            count_map[dist_idx[j].second] += 1;
         }
     }
 
     // Find the class with the most frequency.
-    int current_max_freq = count_map[dist[0].second];
-    int current_class = dist[0].second;
+    int current_max_freq = count_map[dist_idx[0].second];
+    int current_class = dist_idx[0].second;
 
     for(auto it = count_map.begin(); it != count_map.end(); ++it ) {
         // If there is a tie, we choose the first one
