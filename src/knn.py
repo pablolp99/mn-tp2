@@ -1,5 +1,4 @@
 import pandas as pd
-from tqdm import tqdm
 
 from sklearn.base import BaseEstimator
 from sklearn.metrics import accuracy_score, make_scorer, precision_recall_fscore_support
@@ -99,26 +98,42 @@ if __name__ == "__main__":
     X = df.drop(columns="label")
     y = df["label"]
 
-    grid = {
-        'k': [2,3,4,5,10,13,15,20]
-    }
+    X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, random_state=42)
 
-    knn_cv = GridSearchCV(
-        KNNClassifier(),
-        param_grid=grid,
-        scoring=make_scorer(accuracy_score),
-        n_jobs=-1,
-        cv=10,
-        verbose=2,
-    )
+    logger.info(f"Train size: {len(X_train)}")
+    logger.info(f"Test size: {len(X_test)}")
 
-    logger.info("Running GridSearch Cross-Validation for KNN")
-    logger.info("Using grid:")
-    logger.info(grid)
+    knn = KNNClassifier(15)
+    knn.fit(X_train, y_train)
 
-    knn_cv.fit(X, y)
+    start_time = time.time()
+    pred = knn.predict(X_test)
+    end_time = time.time()
 
-    logger.info(knn_cv.best_estimator_)
-    logger.info(knn_cv.best_score_)
-    logger.info(knn_cv.best_params_)
-    logger.info(knn_cv.scorer_)
+    logger.info(f"Prediction time: {end_time-start_time}")
+
+    logger.info(f"Accuracy: {accuracy_score(y_test, pred)}")
+
+    # grid = {
+    #     'k': [2,3,4,5,10,13,15,20]
+    # }
+
+    # knn_cv = GridSearchCV(
+    #     KNNClassifier(),
+    #     param_grid=grid,
+    #     scoring=make_scorer(accuracy_score),
+    #     n_jobs=-1,
+    #     cv=10,
+    #     verbose=2,
+    # )
+
+    # logger.info("Running GridSearch Cross-Validation for KNN")
+    # logger.info("Using grid:")
+    # logger.info(grid)
+
+    # knn_cv.fit(X, y)
+
+    # logger.info(knn_cv.best_estimator_)
+    # logger.info(knn_cv.best_score_)
+    # logger.info(knn_cv.best_params_)
+    # logger.info(knn_cv.scorer_)
