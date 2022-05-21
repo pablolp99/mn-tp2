@@ -80,12 +80,10 @@ class KNNClassifier(BaseEstimator):
         return {"k": self.k}
 
 
-    def set_params(self, params: dict={}):
-        assert bool(params)
-        k = params.get("k", None)
-
+    def set_params(self, k):
         if k is not None:
             self.model = KNNClassifierCpp(k)
+        return self
 
 
     def get_model(self):
@@ -124,7 +122,7 @@ if __name__ == "__main__":
     #     scoring=make_scorer(accuracy_score),
     #     n_jobs=-1,
     #     cv=10,
-    #     verbose=2,
+    #     verbose=3,
     # )
 
     # logger.info("Running GridSearch Cross-Validation for KNN")

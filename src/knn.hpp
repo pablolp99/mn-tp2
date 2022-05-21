@@ -19,9 +19,12 @@ class KNNClassifier {
         Vector target;
         uint train_size;
 
-    private:
-        Vector pred_vector_;
+        // Setters for pybind11 integration
+        void set_train(const Matrix& train);
+        void set_target(const Vector& target);
+        void set_train_size(const uint& train_size);
 
+    private:
         // Private methods
         void _fit(Matrix X, Vector y);
         int _predict(Vector x);

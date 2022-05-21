@@ -13,9 +13,13 @@ public:
 
     //Attributes
     uint alpha;
+    double epsilon;
     Matrix eigenvectors;
+
+    // Setters for pybind11 integration
+    void set_eigenvectors(Matrix eigenvectors);
+
 private:
-    double eps;
     pair<Vector, Matrix> _calculate_eigenvalues(const Matrix& X);
     pair<double, Vector> _power_method(Matrix A);
     Matrix _deflate(const Matrix& A, pair<double, Vector> eigen);
