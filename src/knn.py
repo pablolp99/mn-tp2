@@ -122,7 +122,7 @@ if __name__ == "__main__":
     #     scoring=make_scorer(accuracy_score),
     #     n_jobs=-1,
     #     cv=10,
-    #     verbose=2,
+    #     verbose=3,
     # )
 
     # logger.info("Running GridSearch Cross-Validation for KNN")
