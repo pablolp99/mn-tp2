@@ -15,9 +15,11 @@ public:
     uint alpha;
     double epsilon;
     Matrix eigenvectors;
+    Vector covariance_by_component;
 
     // Setters for pybind11 integration
     void set_eigenvectors(Matrix eigenvectors);
+    void set_covariance_by_component(Vector covariance_by_component);
 
 private:
     pair<Vector, Matrix> _calculate_eigenvalues(const Matrix& X);

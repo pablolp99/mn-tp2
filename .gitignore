@@ -36,3 +36,5 @@ build/
 .vscode/
 .idea/
 data/
+
+src/__pycache__

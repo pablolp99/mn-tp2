@@ -19,6 +19,10 @@ void PCA::set_eigenvectors(Matrix eigenvectors) {
     this->eigenvectors = eigenvectors;
 }
 
+void PCA::set_covariance_by_component(Vector covariance_by_component) {
+    this->covariance_by_component = covariance_by_component;
+}
+
 void PCA::fit(const std::vector<std::vector<int>> list) {
     Matrix X = read_input_data(list);
 
@@ -31,9 +35,13 @@ void PCA::fit(const std::vector<std::vector<int>> list) {
 
     // M = X^t*X
     Matrix M = X.transpose() * X;
+    cout << M.diagonal() << endl;
 
     // Calcular los autovectores mediante el metodo de la potencia
     eigenvectors = get<1>(_calculate_eigenvalues(M));
+
+    Matrix M_x = eigenvectors.transpose() * M * eigenvectors;
+    this->covariance_by_component = M_x.diagonal();
 }
 
 pair<Vector, Matrix> PCA::_calculate_eigenvalues(const Matrix &X) {
@@ -41,14 +49,14 @@ pair<Vector, Matrix> PCA::_calculate_eigenvalues(const Matrix &X) {
     Vector eigvalues(alpha);
     Matrix eigvectors(A.rows(), alpha);
 
-    progressbar bar(alpha);
+    // progressbar bar(alpha);
 
     for(uint i = 0; i < alpha; i++){
         pair<double, Vector> eigen_val_and_vec = _power_method(A);
         eigvalues(i) = get<0>(eigen_val_and_vec);
         eigvectors.col(i) = get<1>(eigen_val_and_vec);
         A = _deflate(A, eigen_val_and_vec);
-        bar.update();
+        // bar.update();
     }
     std::cout << std::endl;
 

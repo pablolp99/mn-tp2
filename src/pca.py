@@ -62,21 +62,32 @@ class PCA(BaseEstimator):
         self.fit(X)
         return self.transform(X)
 
+
+    @property
+    def explained_variance_ratio_(self):
+        total = self.model.covariance_by_component_.sum()
+        return self.model.covariance_by_component_ / total
+
     def get_model(self):
         return self.model
 
 
 if __name__ == "__main__":
-    pca_ours = PCA(3)
+    pca_ours = PCA(784)
+    # pca_sklrn = skld.PCA(n_components=784)
+
 
     logger.info("Loading CSV")
-    df = pd.read_csv("../data/train.csv")[:1000]
+    df = pd.read_csv("../data/train.csv")
 
     # logger.info("Training")
     # pca.fit(X)
 
     logger.info("Transforming")
-    transformed = pca_ours.fit_transform(df.drop(columns="label"))
+    transformed = pca_ours.fit(df.drop(columns="label"))
+    # transformed = pca_ours.fit_transform(df.drop(columns="label"))
+    # pca_sklrn.fit_transform(df.drop(columns="label"))
+    breakpoint();
 
     df["pca_0_ours"] = transformed[:, 0]
     df["pca_1_ours"] = transformed[:, 1]

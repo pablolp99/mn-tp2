@@ -44,12 +44,13 @@ PYBIND11_MODULE(metnum_pkg, m){
     pca.def(py::init<uint &, double &>(), py::arg("alpha"), py::arg("epsilon"))
         .def("fit", &PCA::fit)
         .def("transform", &PCA::transform)
+        .def_readwrite("covariance_by_component_", &PCA::covariance_by_component)
         .def_readwrite("alpha_", &PCA::alpha)
         .def_readwrite("eigenvectors_", &PCA::eigenvectors)
         .def(py::pickle(
             [](const PCA &pca_classifier) { // __getstate__
                 /* Return a tuple that fully encodes the state of the object */
-                return py::make_tuple(pca_classifier.alpha, pca_classifier.epsilon, pca_classifier.eigenvectors);
+                return py::make_tuple(pca_classifier.alpha, pca_classifier.epsilon, pca_classifier.eigenvectors, pca_classifier.covariance_by_component);
             },
             [](py::tuple pca_tuple_representation) { // __setstate__
                 if (pca_tuple_representation.size() != 3)
@@ -60,6 +61,7 @@ PYBIND11_MODULE(metnum_pkg, m){
 
                 /* Assign any additional state */
                 pca_classifier.set_eigenvectors(pca_tuple_representation[2].cast<Matrix>());
+                pca_classifier.set_covariance_by_component(pca_tuple_representation[3].cast<Vector>());
 
                 return pca_classifier;
             }
