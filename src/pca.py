@@ -26,6 +26,10 @@ class PCA(BaseEstimator):
 
         Parameters
         ----------
+        alpha: int
+            Cantidad de componentes principales a tomar
+        epsilon: double
+            Diferencia a evaluar para la decisión de eligibilidad de un autovector en el método de la potencia.
 
         """
         self.model = PCACpp(alpha, epsilon)
@@ -48,6 +52,13 @@ class PCA(BaseEstimator):
         self.model.fit(imgs)
 
     def transform(self, X: pd.DataFrame):
+        """Transform
+
+        Parameters
+        ----------
+        X : pd.DataFrame
+            DataFrame con los vectores del modelo a transformar.
+        """
         assert len(X) > 0
         assert len(X.iloc[0]) > 0
 
@@ -59,6 +70,15 @@ class PCA(BaseEstimator):
         return transformed
 
     def fit_transform(self, X: pd.DataFrame):
+        """fit_transform
+
+        Llama secuencialmente a fit y luego transform.
+
+        Parameters
+        ----------
+        X : pd.DataFrame
+            DataFrame con los vectores del modelo a transformar.
+        """
         self.fit(X)
         return self.transform(X)
 
