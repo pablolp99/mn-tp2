@@ -8,8 +8,8 @@ public:
     PCA(uint alpha, double epsilon);
 
     // Methods
-    void fit(const std::vector<std::vector<int>> list);
-    Matrix transform(const std::vector<std::vector<int>> list);
+    void fit(const std::vector<std::vector<double> > list);
+    Matrix transform(const std::vector<std::vector<double> > list);
 
     //Attributes
     uint alpha;
