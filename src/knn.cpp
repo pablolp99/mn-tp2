@@ -22,7 +22,7 @@ void KNNClassifier::set_train_size(const uint& train_size) {
     this->train_size = train_size;
 }
 
-void KNNClassifier::fit(const std::vector<std::vector<int> > list, const std::vector<int> label){
+void KNNClassifier::fit(const std::vector<std::vector<double> > list, const std::vector<int> label){
     Matrix X = read_input_data(list);
     Vector y = read_input_label(label);
     cout << "--KNN-- fitting with k: " << this->k << " and alpha: " << X.cols() << endl;
@@ -35,7 +35,7 @@ void KNNClassifier::_fit(Matrix X, Vector y) {
     this->train_size = uint(X.rows());
 }
 
-Vector KNNClassifier::predict(const std::vector<std::vector<int> > list){
+Vector KNNClassifier::predict(const std::vector<std::vector<double> > list){
     Matrix X = read_input_data(list);
 
     Vector res(X.rows());

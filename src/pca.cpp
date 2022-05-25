@@ -23,7 +23,7 @@ void PCA::set_covariance_by_component(Vector covariance_by_component) {
     this->covariance_by_component = covariance_by_component;
 }
 
-void PCA::fit(const std::vector<std::vector<int>> list) {
+void PCA::fit(const std::vector<std::vector<double>> list) {
     Matrix X = read_input_data(list);
 
     std::cout << "--PCA-- fitting for alpha: " << alpha << std::endl;
@@ -95,7 +95,7 @@ Matrix PCA::_deflate(const Matrix& A, pair<double, Vector> eigen_val_and_vec) {
     return  A - (eigenval * eigenvec * eigenvec.transpose());
 }
 
-Matrix PCA::transform(const std::vector<std::vector<int>> list) {
+Matrix PCA::transform(const std::vector<std::vector<double>> list) {
     Matrix X = read_input_data(list);
     return X * eigenvectors;
 }

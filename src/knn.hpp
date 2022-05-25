@@ -10,8 +10,8 @@ class KNNClassifier {
         KNNClassifier(uint k_neighbors);
 
         // Methods
-        void fit(const std::vector<std::vector<int> > list, const std::vector<int> y);
-        Vector predict(const std::vector<std::vector<int> > list);
+        void fit(const std::vector<std::vector<double> > list, const std::vector<int> y);
+        Vector predict(const std::vector<std::vector<double> > list);
         
         // Attributes
         uint k;
