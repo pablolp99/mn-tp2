@@ -26,6 +26,8 @@ void PCA::set_covariance_by_component(Vector covariance_by_component) {
 void PCA::fit(const std::vector<std::vector<int>> list) {
     Matrix X = read_input_data(list);
 
+    std::cout << "--PCA-- fitting for alpha: " << alpha << std::endl;
+
     // Promedio de las imagenes
     Vector u = X.colwise().mean();
 
@@ -35,7 +37,6 @@ void PCA::fit(const std::vector<std::vector<int>> list) {
 
     // M = X^t*X
     Matrix M = X.transpose() * X;
-    cout << M.diagonal() << endl;
 
     // Calcular los autovectores mediante el metodo de la potencia
     eigenvectors = get<1>(_calculate_eigenvalues(M));
@@ -50,6 +51,7 @@ pair<Vector, Matrix> PCA::_calculate_eigenvalues(const Matrix &X) {
     Matrix eigvectors(A.rows(), alpha);
 
     // progressbar bar(alpha);
+    std::cout << "--PCA-- calculating eigenvectors for alpha: " << alpha << std::endl;
 
     for(uint i = 0; i < alpha; i++){
         pair<double, Vector> eigen_val_and_vec = _power_method(A);
@@ -58,8 +60,7 @@ pair<Vector, Matrix> PCA::_calculate_eigenvalues(const Matrix &X) {
         A = _deflate(A, eigen_val_and_vec);
         // bar.update();
     }
-    std::cout << std::endl;
-
+    
     return make_pair(eigvalues, eigvectors);
 }
 

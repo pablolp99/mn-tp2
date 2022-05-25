@@ -53,7 +53,7 @@ PYBIND11_MODULE(metnum_pkg, m){
                 return py::make_tuple(pca_classifier.alpha, pca_classifier.epsilon, pca_classifier.eigenvectors, pca_classifier.covariance_by_component);
             },
             [](py::tuple pca_tuple_representation) { // __setstate__
-                if (pca_tuple_representation.size() != 3)
+                if (pca_tuple_representation.size() != 4)
                     throw std::runtime_error("Invalid state!");
 
                 /* Create a new C++ instance */

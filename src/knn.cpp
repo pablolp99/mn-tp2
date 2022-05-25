@@ -5,7 +5,6 @@
 
 #include "knn.hpp"
 #include "utils.hpp"
-// #include "progressbar.hpp"
 
 KNNClassifier::KNNClassifier(uint k_neighbors) {
     this->k = k_neighbors;
@@ -26,6 +25,7 @@ void KNNClassifier::set_train_size(const uint& train_size) {
 void KNNClassifier::fit(const std::vector<std::vector<int> > list, const std::vector<int> label){
     Matrix X = read_input_data(list);
     Vector y = read_input_label(label);
+    cout << "--KNN-- fitting with k: " << this->k << " and alpha: " << X.cols() << endl;
     _fit(X, y);
 }
 

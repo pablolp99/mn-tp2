@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.base import BaseEstimator
 from sklearn.metrics import accuracy_score, make_scorer, precision_recall_fscore_support
 from sklearn.model_selection import cross_val_score, GridSearchCV, train_test_split
+from sklearn.neighbors import KNeighborsClassifier
 
 import logging
 import sys
@@ -39,6 +40,11 @@ class KNNClassifier(BaseEstimator):
             DataFrame con los vectores de entrenamiento.
         y : pd.Series
             Series con las etiquetas de entrenamiento.
+
+        Returns
+        -------
+        self : object
+            Returns the instance itself.
         """
         assert len(X) > 0
         assert len(X.iloc[0]) > 0
@@ -51,6 +57,7 @@ class KNNClassifier(BaseEstimator):
 
         self.model.fit(imgs, labels)
 
+        return self
 
     def predict(self, X: pd.DataFrame):
         """Predictor
@@ -96,24 +103,24 @@ if __name__ == "__main__":
     X = df.drop(columns="label")
     y = df["label"]
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, random_state=42)
+    # X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, random_state=42)
 
-    logger.info(f"Train size: {len(X_train)}")
-    logger.info(f"Test size: {len(X_test)}")
+    # logger.info(f"Train size: {len(X_train)}")
+    # logger.info(f"Test size: {len(X_test)}")
 
-    knn = KNNClassifier(15)
-    knn.fit(X_train, y_train)
+    # knn = KNNClassifier(15)
+    # knn.fit(X_train, y_train)
 
-    start_time = time.time()
-    pred = knn.predict(X_test)
-    end_time = time.time()
+    # start_time = time.time()
+    # pred = knn.predict(X_test)
+    # end_time = time.time()
 
-    logger.info(f"Prediction time: {end_time-start_time}")
+    # logger.info(f"Prediction time: {end_time-start_time}")
 
-    logger.info(f"Accuracy: {accuracy_score(y_test, pred)}")
+    # logger.info(f"Accuracy: {accuracy_score(y_test, pred)}")
 
     # grid = {
-    #     'k': [2,3,4,5,10,13,15,20]
+    #     'k': [5]
     # }
 
     # knn_cv = GridSearchCV(
@@ -122,7 +129,7 @@ if __name__ == "__main__":
     #     scoring=make_scorer(accuracy_score),
     #     n_jobs=-1,
     #     cv=10,
-    #     verbose=3,
+    #     verbose=10,
     # )
 
     # logger.info("Running GridSearch Cross-Validation for KNN")
@@ -135,3 +142,5 @@ if __name__ == "__main__":
     # logger.info(knn_cv.best_score_)
     # logger.info(knn_cv.best_params_)
     # logger.info(knn_cv.scorer_)
+
+    breakpoint()
