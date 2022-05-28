@@ -82,7 +82,11 @@ Matrix PCA::_deflate(const Matrix& A, pair<double, Vector> eigen_val_and_vec) {
     return  A - (eigenval * eigenvec * eigenvec.transpose());
 }
 
-Matrix PCA::transform(const std::vector<std::vector<double> > list) {
+Matrix PCA::transform(const std::vector<std::vector<double> > list, const int truncate) {
     Matrix X = read_input_data(list);
-    return X * eigenvectors;
+    if (truncate == 0) {
+        return X * eigenvectors;
+    } else {
+        return X * eigenvectors.block(0, 0, eigenvectors.rows(), truncate);
+    }
 }

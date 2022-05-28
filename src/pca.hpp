@@ -9,7 +9,7 @@ public:
 
     // Methods
     void fit(const std::vector<std::vector<double> > list);
-    Matrix transform(const std::vector<std::vector<double> > list);
+    Matrix transform(const std::vector<std::vector<double> > list, const int truncate);
 
     //Attributes
     uint alpha;
