@@ -1,9 +1,6 @@
-import pandas as pd
 import numpy as np
 
 from sklearn.base import BaseEstimator
-# from sklearn.metrics import accuracy_score, make_scorer, precision_recall_fscore_support
-# from sklearn.model_selection import cross_val_score, GridSearchCV, train_test_split
 
 import logging
 import sys
@@ -50,22 +47,3 @@ class KNNClassifier(BaseEstimator):
     
     def __repr__(self):
         return repr(f"k: {self.k} - model: {self.model}")
-
-if __name__ == "__main__":
-
-    train = pd.read_csv("../data/train.csv")
-
-    X = train.drop(columns='label').to_numpy()
-    y = train.label.to_numpy()
-
-
-    _knn = KNNClassifier(2)
-    _knn.fit(X[4200:41999], y[4200:41999])
-
-    _knn_st = time.time()
-                
-    _knn.predict(X[:4200])
-
-    _knn_et = time.time()
-
-    print(_knn_et - _knn_st)
