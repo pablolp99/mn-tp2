@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 from sklearn.base import BaseEstimator
 
@@ -47,3 +48,6 @@ class KNNClassifier(BaseEstimator):
     
     def __repr__(self):
         return repr(f"k: {self.k} - model: {self.model}")
+
+if __name__ == "__main__":
+    df = pd.read_csv("../data/train.csv")[:5000]
