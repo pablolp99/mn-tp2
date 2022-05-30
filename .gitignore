@@ -36,3 +36,5 @@ build/
 .vscode/
 .idea/
 data/
+.ipynb_checkpoints/
+__pycache__/

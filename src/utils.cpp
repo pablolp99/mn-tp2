@@ -9,7 +9,7 @@
 
 namespace py = pybind11;
 
-Matrix read_input_data(const std::vector<std::vector<int> > list) {
+Matrix read_input_data(const std::vector<std::vector<double> > list) {
     uint imgs = list.size();
     uint img_size = list.at(0).size();
 

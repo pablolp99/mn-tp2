@@ -7,7 +7,7 @@
 
 namespace py = pybind11;
 
-Matrix read_input_data(const std::vector<std::vector<int> > list);
+Matrix read_input_data(const std::vector<std::vector<double> > list);
 Vector read_input_label(const std::vector<int> list);
 Vector init_random_vector(uint size);
 
